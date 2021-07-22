@@ -1,6 +1,6 @@
 package com.example.blog
 
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -19,16 +19,20 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
     }
 
     @Test
-    fun `Assert blog page title, content and status code` () {
+    fun `Assert blog page title, content and status code`() {
         println(">> Assert blog page title, content and status code")
         val entity = restTemplate.getForEntity<String>("/")
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(entity.body).contains("<h1>Blog</h1>")
+        assertThat(entity.body).contains("<h1>Blog</h1>", "Refactor")
     }
 
     @Test
-    fun `Assert article page title, content and status code` () {
-        println(">> TODO")
+    fun `Assert article page title, content and status code`() {
+        println(">> Assert article page title, content and status code")
+        val title = "Refactor Aluminium has landed"
+        val entity = restTemplate.getForEntity<String>("/article/${title.toSlug()}")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains(title, "Lorem ipsum", "dolor sit amet")
     }
 
     @AfterAll
